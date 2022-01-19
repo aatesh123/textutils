@@ -1,48 +1,93 @@
 import './App.css';
+import About from './components/About';
+import Navbar from './components/Navbar';
+import TextForm from './components/TextForm';
+import React, { useState } from 'react'
+import Alert from './components/Alert';
+
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Routes,
+  Link
+} from "react-router-dom";
 
 function App() {
+ const [mode,setmode] = useState('light');
+ const [alert,setalert] = useState(null)
+
+ const showalert = (message ,type)=>{
+   setalert({
+     msg: message,
+     type: type
+   })
+   setTimeout(()=>{
+       setalert(null);
+   },1500);
+ }
+
+ const toggleMode=()=>{
+   if(mode=== 'light'){
+     setmode('dark')
+     document.body.style.backgroundColor='#042743'
+     showalert("Dark mode has been enabled", "success");
+    //  let t=7;
+    //  while(t--){
+    //  setTimeout(() => {
+    //   document.title="This is working "
+    //  }, 1000);
+    //  setTimeout(() => {
+    //   document.title="good work buddy "
+    //  }, 1500);
+    //  }
+     
+   }
+   else
+   {
+    setmode('light')
+    document.body.style.backgroundColor='white';
+    showalert("Light mode has been enabled", "success");
+   }
+ }
   return (
-    //jsx
-    // <div className="blank">
-    //   aatesh
-    // </div>
+    
     <>
-     <nav className="navbar navbar-expand-lg navbar-light bg-light">
-  <div className="container-fluid">
-    <a className="navbar-brand" href="#">Navbar</a>
-    <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span className="navbar-toggler-icon"></span>
-    </button>
-    <div className="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-        <li className="nav-item">
-          <a className="nav-link active" aria-current="page" href="#">Home</a>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link" href="#">Link</a>
-        </li>
-        <li className="nav-item dropdown">
-          <a className="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a className="dropdown-item" href="#">Action</a></li>
-            <li><a className="dropdown-item" href="#">Another action</a></li>
-            <li><hr className="dropdown-divider" /></li>
-            <li><a className="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li className="nav-item">
-          <a className="nav-link disabled">Disabled</a>
-        </li>
-      </ul>
-      <form className="d-flex">
-        <input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-        <button className="btn btn-outline-success" type="submit">Search</button>
-      </form>
-    </div>
-  </div>
-</nav>
+    <Router>
+ <Navbar title="MyApp" mode={mode} toggleMode={toggleMode} />
+                  {/*  
+                    title is for title of applicaiton 
+                      mode is for choice of dark and light
+                      toggleMode is function  which is defined outside return
+                  */ }
+  <Alert alert={alert} />
+ {/* <div className="container my-3">
+  <Switch>
+          <Route path="/about">
+            <About />
+          </Route>
+          <Route path="/">
+          <TextForm heading="enter the text to analyze" showalert={showalert} mode={mode}/>
+          </Route>
+  </Switch>
+ </div> */}
+
+ 
+ <div className="container">
+          <Routes>
+            <Route path="/about" 
+            element={<About />}>
+            </Route>
+            <Route path="/"
+             element={<TextForm heading="Enter text to analyze"  mode={mode} showalert={showalert} />}>
+            </Route>
+          </Routes>
+        </div>
+
+
+ 
+ 
+ </Router>
     </>
 
   );
